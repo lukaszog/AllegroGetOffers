@@ -8,9 +8,14 @@ angular.module('AllegroService', [])
 
 
   var allegroctrl = this;
+  var offersdata = [];
 
   function postUrl(url){
     AllegroModel.postUrl(url).then(function (result){
+
+      allegroctrl.offers = result.data;
+
+      console.log("Odpowiedz z serwera: " + allegroctrl.offers);
 
 
     })
