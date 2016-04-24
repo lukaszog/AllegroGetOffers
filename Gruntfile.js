@@ -11,6 +11,7 @@ module.exports = function (grunt) {
 
   // Time how long tasks take. Can help when optimizing build times
   require('time-grunt')(grunt);
+  grunt.loadNpmTasks('grunt-nodemon');
 
   // Automatically load required Grunt tasks
   require('jit-grunt')(grunt, {
@@ -220,7 +221,7 @@ module.exports = function (grunt) {
             }
           }
       }
-    }, 
+    },
 
     // Renames files for browser caching purposes
     filerev: {
@@ -423,6 +424,13 @@ module.exports = function (grunt) {
         configFile: 'test/karma.conf.js',
         singleRun: true
       }
+    },
+
+    nodemon: {
+      script: './server',
+      env: {
+        'NODE_ENV': 'development'
+      }
     }
   });
 
@@ -432,12 +440,15 @@ module.exports = function (grunt) {
       return grunt.task.run(['build', 'connect:dist:keepalive']);
     }
 
+
+
     grunt.task.run([
       'clean:server',
       'wiredep',
       'concurrent:server',
       'postcss:server',
       'connect:livereload',
+      'nodemon',
       'watch'
     ]);
   });

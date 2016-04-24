@@ -8,7 +8,8 @@ angular.module('AllegroService', [])
 
 
   var allegroctrl = this;
-  var offersdata = [];
+
+  allegroctrl.offers = [];
 
   function postUrl(url){
     AllegroModel.postUrl(url).then(function (result){
