@@ -4,4 +4,12 @@
     <input type="text" id="url" name="url" ng-model="allegrosrv.newUrl.url" placeholder="Wprowadź adres">
     <button type="submit" class="btn btn-info btn-lg">Wyślij</button>
   </form>
+
+  <ul>
+    <li ng-repeat="offer in printResult">
+
+      <p>{{offer.name}}</p>
+    </li>
+  </ul>
+
 </div>

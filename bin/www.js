@@ -66,6 +66,7 @@ router.route('/send')
                 request(task.url, function(err, resp, body){
 
                   if(body) {
+
                     $ = cheerio.load(body);
                     links = $('div.offer-info');
 
@@ -109,7 +110,8 @@ router.route('/send')
 
         }
         console.log('All items have been processed' + items.length);
-        res.sendStatus(200);
+        //res.sendStatus(200);
+        res.send(items);
       };
   });
 

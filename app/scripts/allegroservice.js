@@ -19,9 +19,8 @@ angular.module('AllegroService', [])
     AllegroModel.postUrl(url).then(function (result){
 
       allegrosrv.offers = result.data;
-
       console.log("Odpowiedz z serwera: " + allegrosrv.offers);
-
+      $scope.printResult = allegrosrv.offers;
 
     })
   }
