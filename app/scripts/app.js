@@ -23,7 +23,7 @@ angular
       .when('/', {
         templateUrl: 'views/main.html',
         controller: 'AllegroCtrl',
-        controllerAs: 'allegro'
+        controllerAs: 'allegrosrv'
       })
       .otherwise({
         redirectTo: '/'

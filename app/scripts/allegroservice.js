@@ -6,25 +6,34 @@
 angular.module('AllegroService', [])
 .controller('AllegroCtrl', function($scope, AllegroModel){
 
+  var allegrosrv = this;
+  allegrosrv.offers = [];
 
-  var allegroctrl = this;
+  console.log("Jestem tutaj");
 
-  allegroctrl.offers = [];
+  function postUrlToService(url){
 
-  function postUrl(url){
+    initCreate();
+    console.log("wywoluje funkcje postUrl " + url);
+
     AllegroModel.postUrl(url).then(function (result){
 
-      allegroctrl.offers = result.data;
+      allegrosrv.offers = result.data;
 
-      console.log("Odpowiedz z serwera: " + allegroctrl.offers);
+      console.log("Odpowiedz z serwera: " + allegrosrv.offers);
 
 
     })
   }
 
+  function initCreate(){
+    allegrosrv.newUrl = { url: ''};
+  }
+
+  allegrosrv.postUrlToService = postUrlToService;
 
 })
-.constant('ENDPOINT', 'http://localhost:9000/api/send')
+.constant('ENDPOINT', 'http://localhost:8080/api/send')
 .service('AllegroModel', function($http, ENDPOINT) {
 
     var service = this;
@@ -34,6 +43,7 @@ angular.module('AllegroService', [])
     }
 
     service.postUrl = function (url) {
-      return $http.post(getUrl());
+      console.log("robie post: " + url);
+      return $http.post(getUrl(),url);
     };
 });

@@ -2,12 +2,21 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 var cheerio = require('cheerio');
-var request = require('request');
+var request = require('request').defaults({maxRedirects:200});
 var async = require('async');
 require('events').EventEmitter.prototype._maxListeners = 100;
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
+// Add headers
+app.use(function (req, res, next) {
+
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "X-Requested-With");
+  res.header("Access-Control-Allow-Headers", "Content-Type");
+  res.header("Access-Control-Allow-Methods", "PUT, GET, POST, DELETE, OPTIONS");
+  next();
+});
 
 
 var port = process.env.PORT || 8080;
@@ -40,6 +49,8 @@ function itemParam(name, price, url, id){
 router.route('/send')
   .post(function(req, res){
 
+      console.log("jest jakis post");
+      console.log(req.body.url);
       var url = req.body.url;
       var items = [];
       var k=0;
@@ -71,6 +82,9 @@ router.route('/send')
 
                     });
 
+                  }else{
+                    console.log("There is no body");
+                    console.log(err);
                   }
                   callback();
                 });
@@ -94,7 +108,7 @@ router.route('/send')
           console.log(items[i].name + ' |  ' + items[i].id + ' | ' + items[i].price + ' | ' + items[i].url);
 
         }
-        console.log('all items have been processed' + items.length);
+        console.log('All items have been processed' + items.length);
         res.sendStatus(200);
       };
   });

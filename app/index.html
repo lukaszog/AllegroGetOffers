@@ -31,7 +31,7 @@
 
 </head>
 
-<body>
+<body ng-app="allegroapiApp">
 
 <!-- Add your site or application content here -->
 <div class="header">
@@ -62,18 +62,12 @@
 
 <div class="container">
 
-  <div class="jumbotron">
-    <h1>Wprowadź adres URL</h1>
-    <form name="urlForm">
-        <input type="text" id="url" name="url" placeholder="Wprowadź adres">
-        <button data-ng-disabled="progress.active()" data-ng-click="submit(helpForm)" class="btn btn-default">Wyślij</button>
-    </form>
 
 
 
-
-  </div>
-
+    <div class="container">
+      <div ng-view=""></div>
+    </div>
 
 
 </div>
@@ -103,6 +97,7 @@
 <script src="bower_components/angular-material/angular-material.js"></script>
 
 <script type="text/javascript" src="scripts/app.js"></script>
+<script type="text/javascript" src="scripts/allegroservice.js"></script>
 
 <!-- endbower -->
 <!-- endbuild -->
