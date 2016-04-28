@@ -16,7 +16,8 @@ angular
     'ngRoute',
     'ngSanitize',
     'ngTouch',
-    'AllegroService'
+    'AllegroService',
+    'ui.bootstrap'
   ])
   .config(function ($routeProvider) {
     $routeProvider
@@ -25,7 +26,16 @@ angular
         controller: 'AllegroCtrl',
         controllerAs: 'allegrosrv'
       })
+      .when('/page/:currentPage', {
+        templateUrl: 'views/main.html',
+        controller: 'AllegroCtrl',
+        controllerAs: 'allegrosrv'
+
+      })
       .otherwise({
         redirectTo: '/'
       });
-  });
+})
+
+
+

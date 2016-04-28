@@ -51,7 +51,11 @@ router.route('/send')
 
       console.log("jest jakis post");
       console.log(req.body.url);
+
       var url = req.body.url;
+      var pageNumber = req.body.page;
+
+
       var items = [];
       var k=0;
       var q = async.queue(function(task, callback){
@@ -72,10 +76,10 @@ router.route('/send')
 
                     $(links).each(function (i, link) {
 
-                      console.log($(link).find('a.offer-title').attr('href'));
+                      //console.log($(link).find('a.offer-title').attr('href'));
                       $(link).find('span.statement *').remove();
                       var price = $(link).find('span.offer-buy-now').text().trim();
-                      console.log(price);
+                      //console.log(price);
                       items[k] = items[k] || [];
                       items[k] = new itemParam($(link).find('a.offer-title').text(),
                         price,$(link).find('a.offer-title').attr('href'), k);
@@ -99,8 +103,11 @@ router.route('/send')
         }
       );
 
-      for(var i=1; i<2; i++) {
-        q.push({url: url + '&p='+i});
+
+      if(pageNumber){
+        q.push({url: url + '&p='+pageNumber});
+      }else {
+        q.push({url: url + '&p=1'});
       }
       q.drain = function(errr, p) {
 
@@ -111,7 +118,9 @@ router.route('/send')
         }
         console.log('All items have been processed' + items.length);
         //res.sendStatus(200);
-        res.send(items);
+        var pages = 100;
+
+        res.send({offers: items, pg: pages});
       };
   });
 

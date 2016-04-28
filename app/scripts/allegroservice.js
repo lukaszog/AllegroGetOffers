@@ -4,36 +4,68 @@
 'use strict';
 
 angular.module('AllegroService', [])
-.controller('AllegroCtrl', function($scope, AllegroModel){
+  .controller('AllegroCtrl', function ($scope, AllegroModel) {
 
-  var allegrosrv = this;
-  allegrosrv.offers = [];
+    var allegrosrv = this;
+    var urlFromForm = '';
+    var pageNumber = '';
+    var strony = null;
+    allegrosrv.offers = [];
 
-  console.log("Jestem tutaj");
+    console.log("Nie ma mnie tutaj");
+    console.log('jestem tutaj');
 
-  function postUrlToService(url){
+    $scope.pages = 10;
 
-    initCreate();
-    console.log("wywoluje funkcje postUrl " + url);
 
-    AllegroModel.postUrl(url).then(function (result){
+    $scope.itemsPerPage = 10;
+    $scope.currentPage = 1;
+    $scope.totalItems = 100;
 
-      allegrosrv.offers = result.data;
-      console.log("Odpowiedz z serwera: " + allegrosrv.offers);
-      $scope.printResult = allegrosrv.offers;
+    function postUrlToService(url) {
 
-    })
-  }
+      $scope.dataLoading = true;
+      $scope.printResult = null;
+      urlFromForm = url;
+      initCreate();
 
-  function initCreate(){
-    allegrosrv.newUrl = { url: ''};
-  }
 
-  allegrosrv.postUrlToService = postUrlToService;
 
-})
-.constant('ENDPOINT', 'http://localhost:8080/api/send')
-.service('AllegroModel', function($http, ENDPOINT) {
+      console.log('Call postUrlToService ' + url);
+
+      AllegroModel.postUrl(angular.extend({},
+        {page: pageNumber},url)).then(function (result) {
+
+        allegrosrv.offers = result.data;
+
+        console.log('Server response: ' + allegrosrv.offers);
+
+        //$scope.totalItems = allegrosrv.offers.pg;
+        $scope.printResult = allegrosrv.offers;
+        $scope.dataLoading = false;
+      });
+    }
+
+    function initCreate() {
+      allegrosrv.newUrl = {url: ''};
+    }
+
+    $scope.$watch("currentPage", function(newInput, oldInput) {
+      if(newInput != oldInput){
+        //Do your stuff
+        console.log(newInput);
+        pageNumber = newInput;
+        $scope.currentPage = newInput;
+        postUrlToService(urlFromForm);
+
+      }
+    });
+
+    allegrosrv.postUrlToService = postUrlToService;
+
+  })
+  .constant('ENDPOINT', 'http://localhost:8080/api/send')
+  .service('AllegroModel', function ($http, ENDPOINT) {
 
     var service = this;
 
@@ -42,7 +74,7 @@ angular.module('AllegroService', [])
     }
 
     service.postUrl = function (url) {
-      console.log("robie post: " + url);
-      return $http.post(getUrl(),url);
+      console.log("Post: " + url);
+      return $http.post(getUrl(), url);
     };
-});
+  });

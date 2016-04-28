@@ -5,8 +5,20 @@
     <button type="submit" class="btn btn-info btn-lg">Wyślij</button>
   </form>
 
+<p>{{pages}}</p>
+
+  <div ng-if="dataLoading">
+    Loading...
+  </div>
+
+
+
+  <pagination total-items="totalItems" items-per-page="itemsPerPage"
+              ng-model="currentPage" ng-change="pageChanged()"></pagination>
+
+  <p>{{printResult.pg}}</p>
   <ul>
-    <li ng-repeat="offer in printResult">
+    <li ng-repeat="offer in printResult.offers">
 
       <p>{{offer.name}}</p>
     </li>
