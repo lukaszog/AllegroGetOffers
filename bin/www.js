@@ -54,8 +54,7 @@ router.route('/send')
 
       var url = req.body.url;
       var pageNumber = req.body.page;
-
-
+      var pagesFromLink = '';
       var items = [];
       var k=0;
       var q = async.queue(function(task, callback){
@@ -73,6 +72,9 @@ router.route('/send')
 
                     $ = cheerio.load(body);
                     links = $('div.offer-info');
+                    pages = $('li.quantity');
+                    pagesFromLink = $(pages).find('a.last').text();
+                    console.log("Ilosc stron: " + $(pages).find('a.last').text());
 
                     $(links).each(function (i, link) {
 
@@ -103,7 +105,6 @@ router.route('/send')
         }
       );
 
-
       if(pageNumber){
         q.push({url: url + '&p='+pageNumber});
       }else {
@@ -113,12 +114,12 @@ router.route('/send')
 
         for (var i=0; i<items.length; i++) {
 
-          console.log(items[i].name + ' |  ' + items[i].id + ' | ' + items[i].price + ' | ' + items[i].url);
+         // console.log(items[i].name + ' |  ' + items[i].id + ' | ' + items[i].price + ' | ' + items[i].url);
 
         }
         console.log('All items have been processed' + items.length);
         //res.sendStatus(200);
-        var pages = 100;
+        var pages = pagesFromLink * 10;
 
         res.send({offers: items, pg: pages});
       };

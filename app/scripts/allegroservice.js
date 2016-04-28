@@ -9,18 +9,17 @@ angular.module('AllegroService', [])
     var allegrosrv = this;
     var urlFromForm = '';
     var pageNumber = '';
-    var strony = null;
+
+    var flag=0;
     allegrosrv.offers = [];
 
     console.log("Nie ma mnie tutaj");
     console.log('jestem tutaj');
 
-    $scope.pages = 10;
-
+    $scope.totalItems = 0;
 
     $scope.itemsPerPage = 10;
     $scope.currentPage = 1;
-    $scope.totalItems = 100;
 
     function postUrlToService(url) {
 
@@ -39,10 +38,18 @@ angular.module('AllegroService', [])
         allegrosrv.offers = result.data;
 
         console.log('Server response: ' + allegrosrv.offers);
-
-        //$scope.totalItems = allegrosrv.offers.pg;
         $scope.printResult = allegrosrv.offers;
         $scope.dataLoading = false;
+
+        if($scope.totalItems != $scope.printResult.pg)
+        {
+          flag=0;
+        }
+        if(flag==0) {
+          $scope.totalItems = allegrosrv.offers.pg;
+        }
+
+        flag=1;
       });
     }
 
@@ -57,7 +64,6 @@ angular.module('AllegroService', [])
         pageNumber = newInput;
         $scope.currentPage = newInput;
         postUrlToService(urlFromForm);
-
       }
     });
 

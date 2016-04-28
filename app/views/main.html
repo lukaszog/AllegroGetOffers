@@ -5,7 +5,8 @@
     <button type="submit" class="btn btn-info btn-lg">Wyślij</button>
   </form>
 
-<p>{{pages}}</p>
+
+
 
   <div ng-if="dataLoading">
     Loading...
@@ -13,8 +14,11 @@
 
 
 
-  <pagination total-items="totalItems" items-per-page="itemsPerPage"
+
+  <pagination total-items="totalItems" max-size="'10'"
               ng-model="currentPage" ng-change="pageChanged()"></pagination>
+
+  <p>Pages: {{totalItems}}</p>
 
   <p>{{printResult.pg}}</p>
   <ul>
