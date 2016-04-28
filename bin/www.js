@@ -2,8 +2,10 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 var cheerio = require('cheerio');
-var request = require('request').defaults({maxRedirects:200});
+var request = require('request').defaults({jar: true});
 var async = require('async');
+var item = require('../modules/item');
+
 require('events').EventEmitter.prototype._maxListeners = 100;
 
 app.use(bodyParser.urlencoded({extended: true}));
@@ -39,12 +41,7 @@ function errorHandling(res, status, message)
   });
 }
 
-function itemParam(name, price, url, id){
-  this.name = name
-  this.price = price
-  this.id = id
-  this.url = url
-}
+
 
 router.route('/send')
   .post(function(req, res){
@@ -78,17 +75,15 @@ router.route('/send')
 
                     $(links).each(function (i, link) {
 
-                      //console.log($(link).find('a.offer-title').attr('href'));
                       $(link).find('span.statement *').remove();
                       var price = $(link).find('span.offer-buy-now').text().trim();
-                      //console.log(price);
                       items[k] = items[k] || [];
-                      items[k] = new itemParam($(link).find('a.offer-title').text(),
+                      items[k] = new item.itemParam($(link).find('a.offer-title').text(),
                         price,$(link).find('a.offer-title').attr('href'), k);
                       k++;
 
                     });
-
+                    console.log("Skonczylem===================================");
                   }else{
                     console.log("There is no body");
                     console.log(err);
@@ -114,14 +109,15 @@ router.route('/send')
 
         for (var i=0; i<items.length; i++) {
 
-         // console.log(items[i].name + ' |  ' + items[i].id + ' | ' + items[i].price + ' | ' + items[i].url);
+          console.log(items[i].name + ' |  ' + items[i].id + ' | ' + items[i].price + ' | ' + items[i].url);
 
         }
         console.log('All items have been processed' + items.length);
         //res.sendStatus(200);
         var pages = pagesFromLink * 10;
 
-        res.send({offers: items, pg: pages});
+
+        res.send({offers: items, pg: pages, noPage: pageNumber});
       };
   });
 

@@ -9,6 +9,7 @@ angular.module('AllegroService', [])
     var allegrosrv = this;
     var urlFromForm = '';
     var pageNumber = '';
+    $scope.paginationVisible = false;
 
     var flag=0;
     allegrosrv.offers = [];
@@ -50,6 +51,8 @@ angular.module('AllegroService', [])
         }
 
         flag=1;
+        $scope.paginationVisible = true;
+
       });
     }
 

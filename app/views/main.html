@@ -2,23 +2,18 @@
   <h1>Wprowadź adres URL</h1>
   <form name="urlForm" role="form" ng-submit="allegrosrv.postUrlToService(allegrosrv.newUrl)" novalidate>
     <input type="text" id="url" name="url" ng-model="allegrosrv.newUrl.url" placeholder="Wprowadź adres">
-    <button type="submit" class="btn btn-info btn-lg">Wyślij</button>
+    <button type="submit" class="btn btn-raised btn-primary" style="display: block; width: 100%;">Wyślij</button>
   </form>
-
-
 
 
   <div ng-if="dataLoading">
     Loading...
   </div>
 
-
-
-
+  <div ng-show="paginationVisible && !dataLoading" style="text-align: center;">
   <pagination total-items="totalItems" max-size="'10'"
               ng-model="currentPage" ng-change="pageChanged()"></pagination>
-
-  <p>Pages: {{totalItems}}</p>
+  </div>
 
   <p>{{printResult.pg}}</p>
   <ul>
@@ -27,5 +22,8 @@
       <p>{{offer.name}}</p>
     </li>
   </ul>
-
+  <div ng-show="paginationVisible && !dataLoading" style="text-align: center;">
+    <pagination total-items="totalItems" max-size="'10'"
+                ng-model="currentPage" ng-change="pageChanged()"></pagination>
+  </div>
 </div>
