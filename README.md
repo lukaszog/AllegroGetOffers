@@ -9,6 +9,6 @@ First run server: nodemon bin/www
 
 Next
 
-Run `grunt` for building and `grunt serve` for preview.
+Run `grunt serve` for preview.
 
 
