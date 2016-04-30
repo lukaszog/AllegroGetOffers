@@ -3,6 +3,7 @@
 ## Install
 
 Run npm install
+
 bower install
 
 ## Build & development
