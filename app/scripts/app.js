@@ -32,6 +32,12 @@ angular
         controllerAs: 'allegrosrv'
 
       })
+      .when('/author', {
+        templateUrl: 'views/author.html',
+        controller: 'AllegroCtrl',
+        controllerAs: 'allegrosrv'
+
+      })
       .otherwise({
         redirectTo: '/'
       });

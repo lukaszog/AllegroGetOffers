@@ -5,6 +5,7 @@ var cheerio = require('cheerio');
 var request = require('request').defaults({jar: true});
 var async = require('async');
 var item = require('../modules/item');
+var functions = require('../modules/functions');
 
 require('events').EventEmitter.prototype._maxListeners = 100;
 
@@ -25,22 +26,6 @@ var port = process.env.PORT || 8080;
 
 var router = express.Router();
 
-function isURL(str) {
-
-  var expression = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
-  var regex = new RegExp(expression);
-
-  return str.match(regex);
-}
-
-function errorHandling(res, status, message)
-{
-  res.json({
-    "status": status,
-    "message": message
-  });
-}
-
 
 
 router.route('/send')
@@ -53,13 +38,15 @@ router.route('/send')
       var pageNumber = req.body.page;
       var pagesFromLink = '';
       var items = [];
+      var images = [];
       var k=0;
       var q = async.queue(function(task, callback){
 
             console.log(task.url);
             if(task.url.length>=1) {
 
-              if (isURL(task.url)) {
+
+              if (functions.isUrl(task.url)) {
                 console.log('OK');
 
 
@@ -71,15 +58,22 @@ router.route('/send')
                     links = $('div.offer-info');
                     pages = $('li.quantity');
                     pagesFromLink = $(pages).find('a.last').text();
-                    console.log("Ilosc stron: " + $(pages).find('a.last').text());
+
+                    element = $('.offer-photo');
+
+                    $(element).each(function(i,image){
+                      var data    = $(image).find('a').attr('data-src');
+                      images[i] = data;
+                    });
 
                     $(links).each(function (i, link) {
+
 
                       $(link).find('span.statement *').remove();
                       var price = $(link).find('span.offer-buy-now').text().trim();
                       items[k] = items[k] || [];
                       items[k] = new item.itemParam($(link).find('a.offer-title').text(),
-                        price,$(link).find('a.offer-title').attr('href'), k);
+                      price,$(link).find('a.offer-title').attr('href'), k, images[k]);
                       k++;
 
                     });
@@ -92,10 +86,10 @@ router.route('/send')
                 });
 
               } else {
-                errorHandling(res, 401,"Invalid url");
+                functions.errorHandling(res, 401,"Invalid url");
               }
             }else{
-                errorHandling(res, 401,"Invalid url");
+                functions.errorHandling(res, 401,"Invalid url");
             }
         }
       );
@@ -106,18 +100,10 @@ router.route('/send')
         q.push({url: url + '&p=1'});
       }
       q.drain = function(errr, p) {
+      console.log('All items have been processed' + items.length);
+      var pages = pagesFromLink * 10;
 
-        for (var i=0; i<items.length; i++) {
-
-          console.log(items[i].name + ' |  ' + items[i].id + ' | ' + items[i].price + ' | ' + items[i].url);
-
-        }
-        console.log('All items have been processed' + items.length);
-        //res.sendStatus(200);
-        var pages = pagesFromLink * 10;
-
-
-        res.send({offers: items, pg: pages, noPage: pageNumber});
+      res.send({offers: items, pg: pages, noPage: pageNumber});
       };
   });
 

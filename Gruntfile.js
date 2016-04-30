@@ -415,7 +415,13 @@ module.exports = function (grunt) {
         'copy:styles',
         'imagemin',
         'svgmin'
-      ]
+      ],
+      dev: {
+        tasks: ['nodemon', 'watch'],
+        options: {
+          logConcurrentOutput: true
+        }
+      }
     },
 
     // Test settings
@@ -427,29 +433,40 @@ module.exports = function (grunt) {
     },
 
     nodemon: {
-      script: './server',
+      script: './bin/www',
       env: {
         'NODE_ENV': 'development'
       }
     }
+
   });
 
+
+  grunt.registerTask('default', '', function() {
+    var taskList = [
+      'jshint',
+      'nodemon',
+      'watch'
+    ];
+    grunt.task.run(taskList);
+  });
 
   grunt.registerTask('serve', 'Compile then start a connect web server', function (target) {
     if (target === 'dist') {
       return grunt.task.run(['build', 'connect:dist:keepalive']);
     }
 
-
-
-    grunt.task.run([
+    var taskList = [
       'clean:server',
       'wiredep',
       'concurrent:server',
       'postcss:server',
       'connect:livereload',
       'watch'
-    ]);
+    ];
+    grunt.task.run(taskList);
+
+
   });
 
   grunt.registerTask('server', 'DEPRECATED TASK. Use the "serve" task instead', function (target) {

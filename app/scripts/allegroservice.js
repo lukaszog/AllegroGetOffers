@@ -13,6 +13,7 @@ angular.module('AllegroService', [])
 
     var flag=0;
     allegrosrv.offers = [];
+    allegrosrv.images = [];
 
     console.log("Nie ma mnie tutaj");
     console.log('jestem tutaj');
@@ -24,36 +25,39 @@ angular.module('AllegroService', [])
 
     function postUrlToService(url) {
 
-      $scope.dataLoading = true;
-      $scope.printResult = null;
-      urlFromForm = url;
-      initCreate();
+      if(url) {
+        $scope.emptyURL = false;
+        $scope.dataLoading = true;
+        $scope.printResult = null;
+        urlFromForm = url;
+        initCreate();
 
+        console.log('Call postUrlToService ' + url);
 
+        AllegroModel.postUrl(angular.extend({},
+          {page: pageNumber}, url)).then(function (result) {
 
-      console.log('Call postUrlToService ' + url);
+          allegrosrv.offers = result.data;
 
-      AllegroModel.postUrl(angular.extend({},
-        {page: pageNumber},url)).then(function (result) {
+          console.log('Server response: ' + allegrosrv.offers);
+          $scope.printResult = allegrosrv.offers;
+          $scope.images = allegrosrv.offers.images;
+          $scope.dataLoading = false;
 
-        allegrosrv.offers = result.data;
+          if ($scope.totalItems != $scope.printResult.pg) {
+            flag = 0;
+          }
+          if (flag == 0) {
+            $scope.totalItems = allegrosrv.offers.pg;
+          }
 
-        console.log('Server response: ' + allegrosrv.offers);
-        $scope.printResult = allegrosrv.offers;
-        $scope.dataLoading = false;
+          flag = 1;
+          $scope.paginationVisible = true;
 
-        if($scope.totalItems != $scope.printResult.pg)
-        {
-          flag=0;
-        }
-        if(flag==0) {
-          $scope.totalItems = allegrosrv.offers.pg;
-        }
-
-        flag=1;
-        $scope.paginationVisible = true;
-
-      });
+        });
+      }else{
+        $scope.emptyURL=true;
+      }
     }
 
     function initCreate() {
