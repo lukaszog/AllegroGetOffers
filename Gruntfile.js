@@ -175,7 +175,7 @@ module.exports = function (grunt) {
     postcss: {
       options: {
         processors: [
-          require('autoprefixer-core')({browsers: ['last 1 version']})
+          require('autoprefixer')({browsers: ['last 1 version']})
         ]
       },
       server: {
@@ -415,13 +415,7 @@ module.exports = function (grunt) {
         'copy:styles',
         'imagemin',
         'svgmin'
-      ],
-      dev: {
-        tasks: ['nodemon', 'watch'],
-        options: {
-          logConcurrentOutput: true
-        }
-      }
+      ]
     },
 
     // Test settings
