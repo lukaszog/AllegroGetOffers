@@ -2,9 +2,9 @@
 
 ## Install
 
-Run npm install
+Run `npm install`
 
-bower install
+`bower install`
 
 ## Build & development
 First run server: nodemon bin/www
